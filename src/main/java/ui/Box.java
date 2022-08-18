@@ -8,4 +8,12 @@ public class Box extends JPanel {
         setBackground(Config.BACK);
         setVisible(true);
     }
+
+    public void setColor(int i) {
+        if (i == 0) {
+            setBackground(Config.BACK);
+        } else {
+            setBackground(Config.FORE);
+        }
+    }
 }

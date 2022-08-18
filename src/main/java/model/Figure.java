@@ -68,12 +68,12 @@ public enum Figure {
             1,1,   2,1,
             1,2);
 
-    private List<Coord> dot;
+    public final List<Coord> dots;
 
     Figure(int... coords) {
-        dot = new ArrayList<Coord>();
+        dots = new ArrayList<Coord>();
         for (int i = 0; i < coords.length; i += 2) {
-            dot.add(new Coord(coords[i], coords[i + 1]));
+            dots.add(new Coord(coords[i], coords[i + 1]));
         }
     }
 
