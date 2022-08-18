@@ -4,13 +4,26 @@ import model.Coord;
 import model.Figure;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class Window extends JFrame implements Runnable {
 
-    Box[][] boxes;
+    private Box[][] boxes;
+    private Figure figure;
+    private Coord coord;
 
     public Window() {
         boxes = new Box[Config.WIDTH][Config.HEIGHT];
+        initForm();
+        initBoxes();
+        addKeyListener(new KeyAdapter());
+    }
+
+    public void addFigure() {
+        figure = Figure.getRandom();
+        coord = new Coord(5, 5);
+        showFigure();
     }
 
     private void initForm() {
@@ -34,17 +47,24 @@ public class Window extends JFrame implements Runnable {
     }
 
     public void run() {
-        initForm();
-        initBoxes();
+        repaint();
     }
 
-    public void showFigure(Figure figure, Coord at) {
+    private void showFigure() {
+        showFigure(figure, coord, 1);
+    }
+
+    private void hideFigure() {
+        showFigure(figure, coord, 0);
+    }
+
+    private void showFigure(Figure figure, Coord at, int color) {
         for (Coord dot : figure.dots) {
-            setBoxColor(at.x + dot.x, at.y + dot.y, 1);
+            setBoxColor(at.x + dot.x, at.y + dot.y, color);
         }
     }
 
-    void setBoxColor(int x, int y, int color) {
+    private void setBoxColor(int x, int y, int color) {
         if (x < 0 || x >= Config.WIDTH) {
             return;
         }
@@ -52,5 +72,26 @@ public class Window extends JFrame implements Runnable {
             return;
         }
         boxes[x][y].setColor(color);
+    }
+
+    class KeyAdapter implements KeyListener {
+        public void keyTyped(KeyEvent e) {
+        }
+
+        public void keyPressed(KeyEvent e) {
+            hideFigure();
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    coord = new Coord(coord.x - 1, coord.y);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    coord = new Coord(coord.x + 1, coord.y);
+                    break;
+            }
+            showFigure();
+        }
+
+        public void keyReleased(KeyEvent e) {
+        }
     }
 }
