@@ -150,7 +150,7 @@ public enum Figures {
     }
 
     public static Figures getRandom() {
-        switch ((int) Math.random() - 7) {
+        switch ((int) (Math.random() * 7)) {
             case 0:
                 return I1;
             case 1:

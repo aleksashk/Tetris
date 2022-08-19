@@ -2,11 +2,24 @@ package service;
 
 import model.Coord;
 import model.Figures;
+import model.Mapable;
 import ui.Config;
 
 public class FlyFigure {
     private Figures figure;
     private Coord coord;
+    private boolean landed;
+    private int ticks;
+
+    Mapable map;
+
+    public FlyFigure(Mapable map) {
+        this.map = map;
+        figure = Figures.getRandom();
+        coord = new Coord(Config.WIDTH / 2 - 2, figure.top.y - figure.bot.y - 1);
+        landed = false;
+        ticks = 2;
+    }
 
     public Figures getFigure() {
         return figure;
@@ -16,9 +29,8 @@ public class FlyFigure {
         return coord;
     }
 
-    public FlyFigure() {
-        this.figure = Figures.getRandom();
-        this.coord = new Coord(Config.WIDTH / 2 - 2, figure.top.y - figure.bot.y - 1);
+    public boolean isLanded() {
+        return landed;
     }
 
     private boolean canMoveFigure(Figures figure, int sx, int sy) {
@@ -34,12 +46,25 @@ public class FlyFigure {
         if (coord.y + sy + figure.bot.y >= Config.HEIGHT) {
             return false;
         }
+        for (Coord dot : figure.dots) {
+            if(map.getBoxColor(coord.x + dot.x + sx, coord.y + dot.y + sy) != 0){
+                return false;
+            }
+        }
         return true;
     }
 
     public void moveFigure(int sx, int sy) {
         if (canMoveFigure(figure, sx, sy)) {
             coord = coord.plus(sx, sy);
+        } else {
+            if (sy == 1) {
+                if (ticks > 0) {
+                    ticks--;
+                } else {
+                    landed = true;
+                }
+            }
         }
     }
 

@@ -8,8 +8,10 @@ public class Config {
 
     public static final int SIZE = 30;
 
-    public static final Color BACK = Color.GRAY;
-    public static final Color FORE = Color.CYAN;
-
-
+    public static final Color[] COLORS =
+            {
+                    Color.GRAY,
+                    Color.CYAN,
+                    Color.GREEN
+            };
 }
