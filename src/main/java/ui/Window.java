@@ -28,7 +28,7 @@ public class Window extends JFrame implements Runnable {
 
     private void initForm() {
         setSize(Config.WIDTH * Config.SIZE + 15,
-                Config.HEIGHT * Config.SIZE + 30);
+                Config.HEIGHT * Config.SIZE + 40);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -74,23 +74,73 @@ public class Window extends JFrame implements Runnable {
         boxes[x][y].setColor(color);
     }
 
-    class KeyAdapter implements KeyListener {
+    private boolean canMoveFigure(Figure figure, int sx, int sy) {
+        if (coord.x + sx + figure.top.x < 0) {
+            return false;
+        }
+        if (coord.x + sx + figure.bot.x >= Config.WIDTH) {
+            return false;
+        }
+//        if (coord.y + sy + figure.top.y < 0) {
+//            return false;
+//        }
+        if (coord.y + sy + figure.bot.y >= Config.HEIGHT) {
+            return false;
+        }
+        return true;
+    }
+
+    private void moveFigure(int sx, int sy) {
+        if (canMoveFigure(figure, sx, sy)) {
+            coord = coord.plus(sx, sy);
+        }
+    }
+
+    private void turnFigure() {
+        Figure rotated = figure.turnRight();
+        if (canMoveFigure(rotated, 0, 0)) {
+            figure = rotated;
+        } else if (canMoveFigure(rotated, 1, 0)) {
+            figure = rotated;
+            moveFigure(1, 0);
+        } else if (canMoveFigure(rotated, -1, 0)) {
+            figure = rotated;
+            moveFigure(-1, 0);
+        }else if (canMoveFigure(rotated, 0, -1)) {
+            figure = rotated;
+            moveFigure(0, -1);
+        }
+    }
+
+    private class KeyAdapter implements KeyListener {
+        @Override
         public void keyTyped(KeyEvent e) {
         }
 
+        @Override
         public void keyPressed(KeyEvent e) {
             hideFigure();
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    coord = new Coord(coord.x - 1, coord.y);
+                    moveFigure(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    coord = new Coord(coord.x + 1, coord.y);
+                    moveFigure(+1, 0);
+                    break;
+                case KeyEvent.VK_UP:
+                    moveFigure(0, -1);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    moveFigure(0, +1);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    turnFigure();
                     break;
             }
             showFigure();
         }
 
+        @Override
         public void keyReleased(KeyEvent e) {
         }
     }

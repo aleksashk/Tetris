@@ -69,12 +69,36 @@ public enum Figure {
             1, 2);
 
     public final List<Coord> dots;
+    public final Coord top;
+    public final Coord bot;
 
     Figure(int... coords) {
         dots = new ArrayList<Coord>();
         for (int i = 0; i < coords.length; i += 2) {
             dots.add(new Coord(coords[i], coords[i + 1]));
         }
+        top = setTop();
+        bot = setBot();
+    }
+
+    private Coord setTop() {
+        int x = dots.get(0).x;
+        int y = dots.get(0).y;
+        for (Coord coord : dots) {
+            if (x > coord.x) x = coord.x;
+            if (y > coord.y) y = coord.y;
+        }
+        return new Coord(x, y);
+    }
+
+    private Coord setBot() {
+        int x = dots.get(0).x;
+        int y = dots.get(0).y;
+        for (Coord coord : dots) {
+            if (x < coord.x) x = coord.x;
+            if (y < coord.y) y = coord.y;
+        }
+        return new Coord(x, y);
     }
 
     public Figure turnRight() {
@@ -126,6 +150,22 @@ public enum Figure {
     }
 
     public static Figure getRandom() {
-        return Figure.values()[(int)(Math.random() * Figure.values().length)];
+        switch ((int) Math.random() - 7) {
+            case 0:
+                return I1;
+            case 1:
+                return J1;
+            case 2:
+                return L1;
+            case 3:
+                return O;
+            case 4:
+                return S1;
+            case 5:
+                return T1;
+            case 6:
+            default:
+                return Z1;
+        }
     }
 }

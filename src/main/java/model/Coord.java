@@ -9,4 +9,7 @@ public class Coord {
         this.y = y;
     }
 
+    public Coord plus(int sx, int sy) {
+        return new Coord(x + sx, y + sy);
+    }
 }
