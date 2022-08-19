@@ -1,10 +1,11 @@
 package ui;
 
 import model.Coord;
-import model.Figures;
 import service.FlyFigure;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -18,6 +19,9 @@ public class Window extends JFrame implements Runnable {
         initForm();
         initBoxes();
         addKeyListener(new KeyAdapter());
+        TimeAdapter timeAdapter = new TimeAdapter();
+        Timer timer = new Timer(1000, timeAdapter);
+        timer.start();
     }
 
     public void addFigure() {
@@ -50,16 +54,16 @@ public class Window extends JFrame implements Runnable {
     }
 
     private void showFigure() {
-        showFigure(figure, coord, 1);
+        showFigure(1);
     }
 
     private void hideFigure() {
-        showFigure(figure, coord, 0);
+        showFigure(0);
     }
 
-    private void showFigure(Figures figure, Coord at, int color) {
-        for (Coord dot : figure.dots) {
-            setBoxColor(at.x + dot.x, at.y + dot.y, color);
+    private void showFigure(int color) {
+        for (Coord dot : fly.getFigure().dots) {
+            setBoxColor(fly.getCoord().x + dot.x, fly.getCoord().y + dot.y, color);
         }
     }
 
@@ -73,6 +77,18 @@ public class Window extends JFrame implements Runnable {
         boxes[x][y].setColor(color);
     }
 
+    private void moveFly(int sx, int sy) {
+        hideFigure();
+        fly.moveFigure(sx, sy);
+        showFigure();
+    }
+
+    private void turnFly(int direction) {
+        hideFigure();
+        fly.turnFigure(direction);
+        showFigure();
+    }
+
     private class KeyAdapter implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {
@@ -80,29 +96,35 @@ public class Window extends JFrame implements Runnable {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            hideFigure();
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    moveFigure(-1, 0);
+                    moveFly(-1, 0);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    moveFigure(+1, 0);
+                    moveFly(+1, 0);
                     break;
                 case KeyEvent.VK_UP:
-                    moveFigure(0, -1);
+                    turnFly(1);
                     break;
                 case KeyEvent.VK_DOWN:
-                    moveFigure(0, +1);
+                    turnFly(2);
                     break;
-                case KeyEvent.VK_SPACE:
-                    turnFigure();
+                case KeyEvent.VK_U:
+                    moveFly(0, -1);
                     break;
             }
-            showFigure();
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
+        }
+    }
+
+    class TimeAdapter implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            moveFly(0, 1);
         }
     }
 }

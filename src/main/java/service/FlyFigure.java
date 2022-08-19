@@ -8,9 +8,17 @@ public class FlyFigure {
     private Figures figure;
     private Coord coord;
 
-    public FlyFigure(Figures figure, Coord coord) {
+    public Figures getFigure() {
+        return figure;
+    }
+
+    public Coord getCoord() {
+        return coord;
+    }
+
+    public FlyFigure() {
         this.figure = Figures.getRandom();
-        this.coord = new Coord(Config.WIDTH / 2 - 2, -figure.top.y);
+        this.coord = new Coord(Config.WIDTH / 2 - 2, figure.top.y - figure.bot.y - 1);
     }
 
     private boolean canMoveFigure(Figures figure, int sx, int sy) {
@@ -29,14 +37,14 @@ public class FlyFigure {
         return true;
     }
 
-    private void moveFigure(int sx, int sy) {
+    public void moveFigure(int sx, int sy) {
         if (canMoveFigure(figure, sx, sy)) {
             coord = coord.plus(sx, sy);
         }
     }
 
-    private void turnFigure() {
-        Figures rotated = figure.turnRight();
+    public void turnFigure(int direction) {
+        Figures rotated = direction == 1 ? figure.turnRight() : figure.turnLeft();
         if (canMoveFigure(rotated, 0, 0)) {
             figure = rotated;
         } else if (canMoveFigure(rotated, 1, 0)) {
