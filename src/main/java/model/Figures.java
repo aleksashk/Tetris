@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public enum Figure {
+public enum Figures {
     I1(0, 1, 1, 1, 2, 1, 3, 1),//oooo
 
     I2(1, 0,
@@ -72,7 +72,7 @@ public enum Figure {
     public final Coord top;
     public final Coord bot;
 
-    Figure(int... coords) {
+    Figures(int... coords) {
         dots = new ArrayList<Coord>();
         for (int i = 0; i < coords.length; i += 2) {
             dots.add(new Coord(coords[i], coords[i + 1]));
@@ -101,7 +101,7 @@ public enum Figure {
         return new Coord(x, y);
     }
 
-    public Figure turnRight() {
+    public Figures turnRight() {
         switch (this) {
             case I1:
                 return I2;
@@ -145,11 +145,11 @@ public enum Figure {
         }
     }
 
-    public Figure turnLeft() {
+    public Figures turnLeft() {
         return turnRight().turnRight().turnRight();
     }
 
-    public static Figure getRandom() {
+    public static Figures getRandom() {
         switch ((int) Math.random() - 7) {
             case 0:
                 return I1;

@@ -1,7 +1,8 @@
 package ui;
 
 import model.Coord;
-import model.Figure;
+import model.Figures;
+import service.FlyFigure;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -10,8 +11,7 @@ import java.awt.event.KeyListener;
 public class Window extends JFrame implements Runnable {
 
     private Box[][] boxes;
-    private Figure figure;
-    private Coord coord;
+    private FlyFigure fly;
 
     public Window() {
         boxes = new Box[Config.WIDTH][Config.HEIGHT];
@@ -21,8 +21,7 @@ public class Window extends JFrame implements Runnable {
     }
 
     public void addFigure() {
-        figure = Figure.getRandom();
-        coord = new Coord(5, 5);
+        fly = new FlyFigure();
         showFigure();
     }
 
@@ -58,7 +57,7 @@ public class Window extends JFrame implements Runnable {
         showFigure(figure, coord, 0);
     }
 
-    private void showFigure(Figure figure, Coord at, int color) {
+    private void showFigure(Figures figure, Coord at, int color) {
         for (Coord dot : figure.dots) {
             setBoxColor(at.x + dot.x, at.y + dot.y, color);
         }
@@ -72,44 +71,6 @@ public class Window extends JFrame implements Runnable {
             return;
         }
         boxes[x][y].setColor(color);
-    }
-
-    private boolean canMoveFigure(Figure figure, int sx, int sy) {
-        if (coord.x + sx + figure.top.x < 0) {
-            return false;
-        }
-        if (coord.x + sx + figure.bot.x >= Config.WIDTH) {
-            return false;
-        }
-//        if (coord.y + sy + figure.top.y < 0) {
-//            return false;
-//        }
-        if (coord.y + sy + figure.bot.y >= Config.HEIGHT) {
-            return false;
-        }
-        return true;
-    }
-
-    private void moveFigure(int sx, int sy) {
-        if (canMoveFigure(figure, sx, sy)) {
-            coord = coord.plus(sx, sy);
-        }
-    }
-
-    private void turnFigure() {
-        Figure rotated = figure.turnRight();
-        if (canMoveFigure(rotated, 0, 0)) {
-            figure = rotated;
-        } else if (canMoveFigure(rotated, 1, 0)) {
-            figure = rotated;
-            moveFigure(1, 0);
-        } else if (canMoveFigure(rotated, -1, 0)) {
-            figure = rotated;
-            moveFigure(-1, 0);
-        }else if (canMoveFigure(rotated, 0, -1)) {
-            figure = rotated;
-            moveFigure(0, -1);
-        }
     }
 
     private class KeyAdapter implements KeyListener {
