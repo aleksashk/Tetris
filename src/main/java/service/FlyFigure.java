@@ -16,7 +16,7 @@ public class FlyFigure {
     public FlyFigure(Mapable map) {
         this.map = map;
         figure = Figures.getRandom();
-        coord = new Coord(Config.WIDTH / 2 - 2, figure.top.y - figure.bot.y - 1);
+        coord = new Coord(Config.WIDTH / 2 - 2, -1);
         landed = false;
         ticks = 2;
     }
@@ -33,6 +33,10 @@ public class FlyFigure {
         return landed;
     }
 
+    public boolean canPlaceFigure() {
+        return canMoveFigure(figure, 0, 0);
+    }
+
     private boolean canMoveFigure(Figures figure, int sx, int sy) {
         if (coord.x + sx + figure.top.x < 0) {
             return false;
@@ -47,7 +51,7 @@ public class FlyFigure {
             return false;
         }
         for (Coord dot : figure.dots) {
-            if(map.getBoxColor(coord.x + dot.x + sx, coord.y + dot.y + sy) != 0){
+            if(map.getBoxColor(coord.x + dot.x + sx, coord.y + dot.y + sy) > 0){
                 return false;
             }
         }

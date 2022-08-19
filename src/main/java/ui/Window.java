@@ -21,13 +21,18 @@ public class Window extends JFrame implements Runnable, Mapable {
         initBoxes();
         addKeyListener(new KeyAdapter());
         TimeAdapter timeAdapter = new TimeAdapter();
-        Timer timer = new Timer(100, timeAdapter);
+        Timer timer = new Timer(160, timeAdapter);
         timer.start();
     }
 
     public void addFigure() {
         fly = new FlyFigure(this);
-        showFigure();
+        if (fly.canPlaceFigure()) {
+            showFigure();
+        } else {
+            setVisible(false);
+            dispose();
+        }
     }
 
     private void initForm() {
@@ -115,10 +120,10 @@ public class Window extends JFrame implements Runnable, Mapable {
                     moveFly(+1, 0);
                     break;
                 case KeyEvent.VK_UP:
-                    turnFly(1);
+                    turnFly(2);
                     break;
                 case KeyEvent.VK_DOWN:
-                    turnFly(2);
+                    turnFly(1);
                     break;
                 case KeyEvent.VK_U:
                     moveFly(0, -1);
