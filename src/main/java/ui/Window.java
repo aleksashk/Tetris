@@ -78,7 +78,7 @@ public class Window extends JFrame implements Runnable, Mapable {
         boxes[x][y].setColor(color);
     }
 
-    public int getBoxColor(int x, int y){
+    public int getBoxColor(int x, int y) {
         if (x < 0 || x >= Config.WIDTH) {
             return -1;
         }
@@ -130,7 +130,35 @@ public class Window extends JFrame implements Runnable, Mapable {
         public void keyReleased(KeyEvent e) {
         }
     }
-    
+
+    private void stripLines() {
+        for (int y = Config.HEIGHT - 1; y >= 0; y--) {
+            while (isFullLine(y)) {
+                dropLine(y);
+            }
+        }
+    }
+
+    private void dropLine(int y) {
+        for (int my = y - 1; my >= 0; my--) {
+            for (int x = 0; x < Config.WIDTH; x++) {
+                setBoxColor(x, my + 1, getBoxColor(x, my));
+            }
+        }
+        for (int x = 0; x < Config.WIDTH; x++) {
+            setBoxColor(x, 0, 0);
+        }
+    }
+
+    private boolean isFullLine(int y) {
+        for (int x = 0; x < Config.WIDTH; x++) {
+            if (getBoxColor(x, y) != 2) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     class TimeAdapter implements ActionListener {
 
         @Override
@@ -138,6 +166,7 @@ public class Window extends JFrame implements Runnable, Mapable {
             moveFly(0, 1);
             if (fly.isLanded()) {
                 showFigure(2);
+                stripLines();
                 addFigure();
             }
         }
